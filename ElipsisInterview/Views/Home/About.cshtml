@@ -1,7 +1,71 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "Circular Array";
 }
 <h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<p>Use this area to provide additional information.</p>
+<div class="container">
+
+    @using (Html.BeginForm("GetCirculars", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+   
+        <div class="form-group">
+            <label class="col-md-2 control-label">ARRAY VALUES</label>
+            <div class="col-md-10">
+                @Html.TextBox("arrayValues",null, new { @class = "form-control", @id="inptArrays", @placeholder="Add Array Values separated by space." })
+                <input type="submit" class="btn btn-default" id="arrayBtn0" value="ADD" />
+            </div>
+        </div>
+
+    }
+
+    <hr />
+
+    @foreach (var item in ViewBag.resultTxt)
+    {
+        <p>@item</p>
+    }
+    @* RESULTS *@
+
+</div>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script>
+    $(document).ready(() => {
+        
+
+        $("#arrayBtn").on('click', () => {
+
+            
+            var inputArrays = $("#inptArrays").val();
+
+
+            var link = "/Home/GetCirculars";
+      
+            $.ajax({
+                url: link,
+                data:{
+                    arrayValues:inputArrays
+                },
+                type: "get",
+                dataType: "json",
+                error: () => {
+                    alert("Failed to Add Variables!.");
+                },
+                success: (data) => {
+
+                    $("#displayText").val(data.arrayVals_);
+                    debugger
+                    //Clear form
+                    $("#inptVariables").val('');
+                    $("#inptArrays").val('');
+                }
+
+            });
+            
+
+        });
+
+    });
+</script>
